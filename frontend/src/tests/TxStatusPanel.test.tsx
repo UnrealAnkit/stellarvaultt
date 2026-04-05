@@ -1,7 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { TxStatusPanel } from '@/components/vault/TxStatusPanel';
-import type { TxState } from '@/types';
 
 describe('TxStatusPanel', () => {
   it('renders nothing when status is idle', () => {

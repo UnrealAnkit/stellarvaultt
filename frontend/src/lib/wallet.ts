@@ -4,11 +4,9 @@ import {
   StellarWalletsKit,
   WalletNetwork,
   FREIGHTER_ID,
-  ALBEDO_ID,
-  XBULL_ID,
   allowAllModules,
 } from '@creit.tech/stellar-wallets-kit';
-import { NETWORK_PASSPHRASE, RPC_URL } from './constants';
+import { NETWORK_PASSPHRASE } from './constants';
 
 let kit: StellarWalletsKit | null = null;
 

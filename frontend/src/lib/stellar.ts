@@ -2,12 +2,10 @@ import {
   Contract,
   rpc,
   TransactionBuilder,
-  Networks,
   BASE_FEE,
   xdr,
   scValToNative,
   nativeToScVal,
-  Address,
 } from '@stellar/stellar-sdk';
 import {
   RPC_URL,
@@ -15,7 +13,7 @@ import {
   TOKEN_CONTRACT_ID,
   VAULT_CONTRACT_ID,
 } from './constants';
-import type { CampaignInfo, AppError, AppErrorInfo } from '@/types';
+import type { CampaignInfo, AppErrorInfo } from '@/types';
 
 // ── RPC Client ────────────────────────────────────────────────────────────────
 
