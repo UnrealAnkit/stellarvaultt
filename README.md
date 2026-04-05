@@ -1,4 +1,5 @@
 # Stellar Reward Vault
+[![CI/CD Pipeline](https://github.com/UnrealAnkit/stellarvault/actions/workflows/ci.yml/badge.svg)](https://github.com/UnrealAnkit/stellarvault/actions/workflows/ci.yml)
 
 > **Stellar Journey to Mastery — Level 4: Green Belt Submission**
 
