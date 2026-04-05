@@ -1,0 +1,13 @@
+[workspace]
+members = [
+    "contracts/reward-token",
+    "contracts/reward-vault",
+]
+resolver = "2"
+
+[profile.release]
+overflow-checks = true
+opt-level = "z"
+lto = true
+panic = "abort"
+codegen-units = 1
