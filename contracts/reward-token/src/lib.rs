@@ -1,8 +1,7 @@
 #![no_std]
 
 use soroban_sdk::{
-    contract, contractimpl, contracttype, symbol_short,
-    Address, Env, String, Symbol,
+    contract, contractimpl, contracttype, symbol_short, Address, Env, String, Symbol,
 };
 
 // ── Storage Keys ──────────────────────────────────────────────────────────────
@@ -44,7 +43,9 @@ impl RewardToken {
         env.storage().instance().set(&DataKey::Name, &name);
         env.storage().instance().set(&DataKey::Symbol, &symbol);
         env.storage().instance().set(&DataKey::Decimals, &decimals);
-        env.storage().instance().set(&DataKey::TotalSupply, &initial_supply);
+        env.storage()
+            .instance()
+            .set(&DataKey::TotalSupply, &initial_supply);
         env.storage().instance().set(&DataKey::Initialized, &true);
 
         // Mint initial supply to admin
@@ -80,10 +81,8 @@ impl RewardToken {
             .persistent()
             .set(&DataKey::Balance(to.clone()), &(to_balance + amount));
 
-        env.events().publish(
-            (symbol_short!("transfer"),),
-            (from, to, amount),
-        );
+        env.events()
+            .publish((symbol_short!("transfer"),), (from, to, amount));
     }
 
     /// Transfer on behalf of another address (used by vault via inter-contract call).
@@ -104,7 +103,10 @@ impl RewardToken {
 
         let from_balance = Self::balance(env.clone(), from.clone());
         if from_balance < amount {
-            panic!("insufficient balance: vault has {} needs {}", from_balance, amount);
+            panic!(
+                "insufficient balance: vault has {} needs {}",
+                from_balance, amount
+            );
         }
 
         env.storage()
@@ -116,10 +118,8 @@ impl RewardToken {
             .persistent()
             .set(&DataKey::Balance(to.clone()), &(to_balance + amount));
 
-        env.events().publish(
-            (symbol_short!("xfer_frm"),),
-            (spender, from, to, amount),
-        );
+        env.events()
+            .publish((symbol_short!("xfer_frm"),), (spender, from, to, amount));
     }
 
     /// Mint additional tokens to an address (admin only).
@@ -145,10 +145,7 @@ impl RewardToken {
             .instance()
             .set(&DataKey::TotalSupply, &(total + amount));
 
-        env.events().publish(
-            (symbol_short!("mint"),),
-            (to, amount),
-        );
+        env.events().publish((symbol_short!("mint"),), (to, amount));
     }
 
     // ── Queries ───────────────────────────────────────────────────────────────
@@ -176,7 +173,10 @@ impl RewardToken {
     }
 
     pub fn decimals(env: Env) -> u32 {
-        env.storage().instance().get(&DataKey::Decimals).unwrap_or(7)
+        env.storage()
+            .instance()
+            .get(&DataKey::Decimals)
+            .unwrap_or(7)
     }
 
     pub fn admin(env: Env) -> Address {

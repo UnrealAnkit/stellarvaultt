@@ -1,14 +1,13 @@
 #![no_std]
 
-use soroban_sdk::{
-    contract, contractimpl, contracttype, symbol_short,
-    Address, Env, Map, Vec,
-};
+use soroban_sdk::{contract, contractimpl, contracttype, symbol_short, Address, Env, Map, Vec};
 
 // ── External Token Contract Interface (for inter-contract calls) ───────────────
 
 mod token {
-    soroban_sdk::contractimport!(file = "../../target/wasm32-unknown-unknown/release/reward_token.wasm");
+    soroban_sdk::contractimport!(
+        file = "../../target/wasm32-unknown-unknown/release/reward_token.wasm"
+    );
 }
 
 // ── Storage Keys ──────────────────────────────────────────────────────────────
@@ -66,16 +65,26 @@ impl RewardVault {
         }
 
         env.storage().instance().set(&DataKey::Admin, &admin);
-        env.storage().instance().set(&DataKey::TokenContract, &token_contract);
-        env.storage().instance().set(&DataKey::RewardAmount, &reward_amount);
-        env.storage().instance().set(&DataKey::CampaignName, &campaign_name);
-        env.storage().instance().set(&DataKey::CampaignActive, &true);
+        env.storage()
+            .instance()
+            .set(&DataKey::TokenContract, &token_contract);
+        env.storage()
+            .instance()
+            .set(&DataKey::RewardAmount, &reward_amount);
+        env.storage()
+            .instance()
+            .set(&DataKey::CampaignName, &campaign_name);
+        env.storage()
+            .instance()
+            .set(&DataKey::CampaignActive, &true);
         env.storage().instance().set(&DataKey::TotalClaims, &0u64);
         env.storage().instance().set(&DataKey::Initialized, &true);
 
         // Initialize empty claim history
         let history: Vec<Address> = Vec::new(&env);
-        env.storage().instance().set(&DataKey::ClaimHistory, &history);
+        env.storage()
+            .instance()
+            .set(&DataKey::ClaimHistory, &history);
 
         env.events().publish(
             (symbol_short!("vault"), symbol_short!("init")),
@@ -127,7 +136,7 @@ impl RewardVault {
         // The vault itself holds the token supply; we move reward_amount to user.
         let vault_addr = env.current_contract_address();
         let token_client = token::Client::new(&env, &token_contract);
-        token_client.transfer(&vault_addr, &user, &reward_amount);      
+        token_client.transfer(&vault_addr, &user, &reward_amount);
         // ──────────────────────────────────────────────────────────────────────
 
         // Mark as claimed
@@ -156,7 +165,9 @@ impl RewardVault {
         if history.len() > 20 {
             history.remove(0);
         }
-        env.storage().instance().set(&DataKey::ClaimHistory, &history);
+        env.storage()
+            .instance()
+            .set(&DataKey::ClaimHistory, &history);
 
         // Emit event
         env.events().publish(
@@ -171,12 +182,12 @@ impl RewardVault {
     pub fn set_campaign_active(env: Env, active: bool) {
         let admin: Address = env.storage().instance().get(&DataKey::Admin).unwrap();
         admin.require_auth();
-        env.storage().instance().set(&DataKey::CampaignActive, &active);
+        env.storage()
+            .instance()
+            .set(&DataKey::CampaignActive, &active);
 
-        env.events().publish(
-            (symbol_short!("campaign"),),
-            (active,),
-        );
+        env.events()
+            .publish((symbol_short!("campaign"),), (active,));
     }
 
     /// Admin can update the reward amount.
@@ -186,7 +197,9 @@ impl RewardVault {
         if amount <= 0 {
             panic!("amount must be positive");
         }
-        env.storage().instance().set(&DataKey::RewardAmount, &amount);
+        env.storage()
+            .instance()
+            .set(&DataKey::RewardAmount, &amount);
     }
 
     // ── Queries ───────────────────────────────────────────────────────────────
@@ -214,12 +227,32 @@ impl RewardVault {
 
     pub fn get_campaign_info(env: Env) -> CampaignInfo {
         CampaignInfo {
-            name: env.storage().instance().get(&DataKey::CampaignName).unwrap(),
+            name: env
+                .storage()
+                .instance()
+                .get(&DataKey::CampaignName)
+                .unwrap(),
             admin: env.storage().instance().get(&DataKey::Admin).unwrap(),
-            token_contract: env.storage().instance().get(&DataKey::TokenContract).unwrap(),
-            reward_amount: env.storage().instance().get(&DataKey::RewardAmount).unwrap_or(0),
-            total_claims: env.storage().instance().get(&DataKey::TotalClaims).unwrap_or(0),
-            is_active: env.storage().instance().get(&DataKey::CampaignActive).unwrap_or(false),
+            token_contract: env
+                .storage()
+                .instance()
+                .get(&DataKey::TokenContract)
+                .unwrap(),
+            reward_amount: env
+                .storage()
+                .instance()
+                .get(&DataKey::RewardAmount)
+                .unwrap_or(0),
+            total_claims: env
+                .storage()
+                .instance()
+                .get(&DataKey::TotalClaims)
+                .unwrap_or(0),
+            is_active: env
+                .storage()
+                .instance()
+                .get(&DataKey::CampaignActive)
+                .unwrap_or(false),
         }
     }
 
@@ -231,7 +264,10 @@ impl RewardVault {
     }
 
     pub fn get_token_contract(env: Env) -> Address {
-        env.storage().instance().get(&DataKey::TokenContract).unwrap()
+        env.storage()
+            .instance()
+            .get(&DataKey::TokenContract)
+            .unwrap()
     }
 
     pub fn get_admin(env: Env) -> Address {

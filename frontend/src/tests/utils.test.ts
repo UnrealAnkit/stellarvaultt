@@ -51,7 +51,7 @@ describe('shortenAddress', () => {
 
   it('preserves the last N characters', () => {
     const result = shortenAddress(addr, 6);
-    expect(result.endsWith('CCWN')).toBe(false); // 6 chars from end
+    expect(result.endsWith('CCWN')).toBe(true); // Address ends with CCWN
     expect(result.endsWith(addr.slice(-6))).toBe(true);
   });
 
