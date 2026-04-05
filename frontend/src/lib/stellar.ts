@@ -1,6 +1,6 @@
 import {
   Contract,
-  SorobanRpc,
+  rpc,
   TransactionBuilder,
   Networks,
   BASE_FEE,
@@ -19,8 +19,8 @@ import type { CampaignInfo, AppError, AppErrorInfo } from '@/types';
 
 // ── RPC Client ────────────────────────────────────────────────────────────────
 
-export function getRpcServer(): SorobanRpc.Server {
-  return new SorobanRpc.Server(RPC_URL, { allowHttp: RPC_URL.startsWith('http://') });
+export function getRpcServer(): rpc.Server {
+  return new rpc.Server(RPC_URL, { allowHttp: RPC_URL.startsWith('http://') });
 }
 
 // ── Contract Helpers ──────────────────────────────────────────────────────────
@@ -44,11 +44,11 @@ export async function buildContractCall(
     .build();
 
   const simResult = await server.simulateTransaction(tx);
-  if (SorobanRpc.Api.isSimulationError(simResult)) {
+  if (rpc.Api.isSimulationError(simResult)) {
     throw parseContractError(simResult.error);
   }
 
-  const preparedTx = SorobanRpc.assembleTransaction(tx, simResult).build();
+  const preparedTx = rpc.assembleTransaction(tx, simResult).build();
   return preparedTx.toXDR();
 }
 
@@ -71,10 +71,10 @@ export async function submitAndPoll(signedXdr: string): Promise<string> {
   while (attempts < maxAttempts) {
     await sleep(2000);
     const result = await server.getTransaction(hash);
-    if (result.status === SorobanRpc.Api.GetTransactionStatus.SUCCESS) {
+    if (result.status === rpc.Api.GetTransactionStatus.SUCCESS) {
       return hash;
     }
-    if (result.status === SorobanRpc.Api.GetTransactionStatus.FAILED) {
+    if (result.status === rpc.Api.GetTransactionStatus.FAILED) {
       throw parseContractError(JSON.stringify(result));
     }
     attempts++;
@@ -107,10 +107,10 @@ async function simulateReadOnly(
     .build();
 
   const simResult = await server.simulateTransaction(tx);
-  if (SorobanRpc.Api.isSimulationError(simResult)) {
+  if (rpc.Api.isSimulationError(simResult)) {
     return null;
   }
-  const successSim = simResult as SorobanRpc.Api.SimulateTransactionSuccessResponse;
+  const successSim = simResult as rpc.Api.SimulateTransactionSuccessResponse;
   return successSim.result?.retval ?? null;
 }
 
