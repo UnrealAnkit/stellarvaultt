@@ -144,7 +144,7 @@ export function RewardCampaignCard() {
         {/* Already claimed message */}
         {hasClaimed && txState.status === 'idle' && (
           <div className="mb-4 rounded-xl border border-vault-green/20 bg-vault-green/5 px-4 py-3 text-center">
-            <p className="text-sm font-medium text-vault-green">✓ You've already claimed your reward</p>
+            <p className="text-sm font-medium text-vault-green">✓ You&apos;ve already claimed your reward</p>
             <p className="mt-0.5 text-xs text-vault-text-dim">
               Each wallet can only claim once. Thank you for participating!
             </p>

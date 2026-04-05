@@ -2,7 +2,7 @@
 
 import { useWallet } from '@/hooks/useWallet';
 import { useTokenBalance } from '@/hooks/useVault';
-import { formatTokenAmount, shortenAddress } from '@/lib/constants';
+import { formatTokenAmount } from '@/lib/constants';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { cn } from '@/lib/utils';
 

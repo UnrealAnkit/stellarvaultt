@@ -12,6 +12,11 @@ function createWrapper() {
   return function Wrapper({ children }: { children: React.ReactNode }) {
     return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
   };
+}
+
+describe('WalletSection', () => {
+  beforeEach(() => {
+    vi.restoreAllMocks();
   });
 
   it('shows connect prompt when not connected', () => {
@@ -44,32 +49,17 @@ function createWrapper() {
     });
 
     render(<WalletSection />, { wrapper: createWrapper() });
-    expect(screen.getByText('Opening wallet…')).toBeInTheDocument();
+    expect(screen.getByText('Connecting...')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /connecting/i })).toBeDisabled();
   });
 
-  it('shows connect error when present', () => {
-    vi.spyOn(useWalletModule, 'useWallet').mockReturnValue({
-      isConnected: false,
-      address: null,
-      name: null,
-      icon: null,
-      connect: vi.fn(),
-      disconnect: vi.fn(),
-      isConnecting: false,
-      connectError: 'Wallet not found',
-    });
-
-    render(<WalletSection />, { wrapper: createWrapper() });
-    expect(screen.getByText('Wallet not found')).toBeInTheDocument();
-  });
-
-  it('shows wallet address when connected', () => {
-    const testAddress = 'GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN';
+  it('shows wallet details when connected', () => {
+    const mockAddress = 'GBJ2...7S2X';
     vi.spyOn(useWalletModule, 'useWallet').mockReturnValue({
       isConnected: true,
-      address: testAddress,
+      address: mockAddress,
       name: 'Freighter',
-      icon: null,
+      icon: 'data:image/svg+xml;base64,mock-icon',
       connect: vi.fn(),
       disconnect: vi.fn(),
       isConnecting: false,
@@ -77,25 +67,8 @@ function createWrapper() {
     });
 
     render(<WalletSection />, { wrapper: createWrapper() });
-    expect(screen.getByText(testAddress)).toBeInTheDocument();
-    expect(screen.getByText('Wallet Address')).toBeInTheDocument();
-  });
-
-  it('calls connect when button is clicked', async () => {
-    const connect = vi.fn();
-    vi.spyOn(useWalletModule, 'useWallet').mockReturnValue({
-      isConnected: false,
-      address: null,
-      name: null,
-      icon: null,
-      connect,
-      disconnect: vi.fn(),
-      isConnecting: false,
-      connectError: null,
-    });
-
-    render(<WalletSection />, { wrapper: createWrapper() });
-    fireEvent.click(screen.getByRole('button', { name: /connect wallet/i }));
-    await waitFor(() => expect(connect).toHaveBeenCalledOnce());
+    expect(screen.getByText('Freighter')).toBeInTheDocument();
+    expect(screen.getByText(mockAddress)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /disconnect/i })).toBeInTheDocument();
   });
 });

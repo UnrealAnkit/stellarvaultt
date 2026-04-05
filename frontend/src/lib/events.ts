@@ -1,4 +1,4 @@
-import { SorobanRpc, xdr, scValToNative } from '@stellar/stellar-sdk';
+import { xdr, scValToNative } from '@stellar/stellar-sdk';
 import { getRpcServer } from './stellar';
 import { VAULT_CONTRACT_ID } from './constants';
 import type { ClaimActivity } from '@/types';
