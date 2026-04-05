@@ -22,13 +22,13 @@ vi.mock('stellar-wallets-kit', () => ({
   allowAllModules: vi.fn().mockReturnValue([]),
 }));
 
-// Mock @stellar/stellar-sdk SorobanRpc
+// Mock @stellar/stellar-sdk rpc
 vi.mock('@stellar/stellar-sdk', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('@stellar/stellar-sdk')>();
+  const actual = await importOriginal<any>(); 
   return {
     ...actual,
-    SorobanRpc: {
-      ...actual.SorobanRpc,
+    rpc: {
+      ...actual.rpc,
       Server: vi.fn().mockImplementation(() => ({
         getAccount: vi.fn().mockResolvedValue({ id: 'GTEST', sequence: '100' }),
         simulateTransaction: vi.fn().mockResolvedValue({
@@ -36,12 +36,12 @@ vi.mock('@stellar/stellar-sdk', async (importOriginal) => {
           minResourceFee: '100',
         }),
         sendTransaction: vi.fn().mockResolvedValue({ status: 'PENDING', hash: 'testhash123' }),
-        getTransaction: vi.fn().mockResolvedValue({ status: 'SUCCESS' }),
-        getLatestLedger: vi.fn().mockResolvedValue({ sequence: 100000 }),
+        getTransaction: vi.fn().mockResolvedValue({ status: 'SUCCESS' }),       
+        getLatestLedger: vi.fn().mockResolvedValue({ sequence: 100000 }),       
         getEvents: vi.fn().mockResolvedValue({ events: [] }),
       })),
       Api: {
-        ...actual.SorobanRpc?.Api,
+        ...(actual.rpc?.Api || {}),
         isSimulationError: vi.fn().mockReturnValue(false),
         GetTransactionStatus: { SUCCESS: 'SUCCESS', FAILED: 'FAILED', NOT_FOUND: 'NOT_FOUND' },
       },
