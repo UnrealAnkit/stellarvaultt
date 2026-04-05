@@ -131,10 +131,20 @@ stellar contract invoke \
 ok "Vault contract initialized. Reward per claim: ${REWARD_AMOUNT} (stroops)"
 
 # ── Step 7: Fund Vault with tokens ───────────────────────────────────────────
-# The vault contract IS the admin, but in this design admin holds the tokens.
-# The vault calls transfer_from(admin→user), so admin must hold the supply.
-# Admin address already has the initial supply from initialize. Done.
-log "Admin holds initial token supply and acts as vault treasury."
+# The vault uses its own balance for rewards, so admin transfers tokens to vault.
+log "Admin holds initial token supply. Transferring tokens to Vault..."
+stellar contract invoke \
+  --id "$TOKEN_CONTRACT_ID" \
+  --source "$ADMIN_KEYPAIR" \
+  --network "$NETWORK" \
+  --rpc-url "$RPC_URL" \
+  --network-passphrase "$NETWORK_PASSPHRASE" \
+  -- transfer \
+  --from "$ADMIN_ADDRESS" \
+  --to "$VAULT_CONTRACT_ID" \
+  --amount "10000000000"
+
+ok "Vault funded with tokens."
 
 # ── Step 8: Write .env files ─────────────────────────────────────────────────
 for ENV_FILE in "frontend/.env.development" "frontend/.env.production"; do
