@@ -1,5 +1,6 @@
 LIVE LINK https://stellarvaultt.vercel.app/
 
+![stellar mobile](https://github.com/user-attachments/assets/f1a3eb28-9239-4156-bb08-f65129360971)
 
 
 ![stellarr ci cd](https://github.com/user-attachments/assets/151d0dc1-cd93-48dc-a4bc-525e0ce55d8d)
