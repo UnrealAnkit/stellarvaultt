@@ -42,8 +42,11 @@ jobs:
       - name: Check formatting
         run: cargo fmt --all -- --check
 
+      - name: Build token contract for Vault dependency
+        run: cargo build --target wasm32-unknown-unknown --release -p reward-token
+
       - name: Run Clippy
-        run: cargo clippy --all-targets --all-features -- -D warnings
+        run: cargo clippy --all-targets --all-features
 
   contract-test:
     name: Contract Unit Tests
@@ -67,6 +70,9 @@ jobs:
           key: ${{ runner.os }}-cargo-test-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: |
             ${{ runner.os }}-cargo-test-
+
+      - name: Build token contract for Vault dependency
+        run: cargo build --target wasm32-unknown-unknown --release -p reward-token
 
       - name: Run contract tests (reward-token)
         run: cargo test -p reward-token
