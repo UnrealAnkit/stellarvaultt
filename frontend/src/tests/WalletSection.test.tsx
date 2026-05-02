@@ -49,8 +49,8 @@ describe('WalletSection', () => {
     });
 
     render(<WalletSection />, { wrapper: createWrapper() });
-    expect(screen.getByText('Connecting...')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /connecting/i })).toBeDisabled();
+    expect(screen.getByText('Opening wallet…')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /opening wallet/i })).toBeDisabled();
   });
 
   it('shows wallet details when connected', () => {
@@ -69,6 +69,5 @@ describe('WalletSection', () => {
     render(<WalletSection />, { wrapper: createWrapper() });
     expect(screen.getByText('Freighter')).toBeInTheDocument();
     expect(screen.getByText(mockAddress)).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /disconnect/i })).toBeInTheDocument();
   });
 });

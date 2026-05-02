@@ -94,7 +94,7 @@ jobs:
 
       - name: Install stellar-cli
         run: |
-          cargo install --locked stellar-cli --features opt
+          cargo install --locked stellar-cli
 
       - name: Cache Cargo
         uses: actions/cache@v4
